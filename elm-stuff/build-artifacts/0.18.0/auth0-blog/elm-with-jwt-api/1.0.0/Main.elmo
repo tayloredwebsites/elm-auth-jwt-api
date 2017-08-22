@@ -1,24 +1,42 @@
-var _auth0_blog$elm_with_jwt_api$Main$update = F2(
-	function (msg, model) {
-		var _p0 = msg;
-		return {
-			ctor: '_Tuple2',
-			_0: _elm_lang$core$Native_Utils.update(
-				model,
-				{
-					quote: A2(_elm_lang$core$Basics_ops['++'], model.quote, 'Appended this.')
-				}),
-			_1: _elm_lang$core$Platform_Cmd$none
-		};
+var _auth0_blog$elm_with_jwt_api$Main$fetchRandomQuoteCompleted = F2(
+	function (model, result) {
+		var _p0 = result;
+		if (_p0.ctor === 'Ok') {
+			return {
+				ctor: '_Tuple2',
+				_0: _elm_lang$core$Native_Utils.update(
+					model,
+					{quote: _p0._0}),
+				_1: _elm_lang$core$Platform_Cmd$none
+			};
+		} else {
+			return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+		}
 	});
+var _auth0_blog$elm_with_jwt_api$Main$api = 'http://localhost:3001/';
+var _auth0_blog$elm_with_jwt_api$Main$randomQuoteUrl = A2(_elm_lang$core$Basics_ops['++'], _auth0_blog$elm_with_jwt_api$Main$api, 'api/random-quote');
+var _auth0_blog$elm_with_jwt_api$Main$fetchRandomQuote = _elm_lang$http$Http$getString(_auth0_blog$elm_with_jwt_api$Main$randomQuoteUrl);
 var _auth0_blog$elm_with_jwt_api$Main$Model = function (a) {
 	return {quote: a};
 };
+var _auth0_blog$elm_with_jwt_api$Main$FetchRandomQuoteCompleted = function (a) {
+	return {ctor: 'FetchRandomQuoteCompleted', _0: a};
+};
+var _auth0_blog$elm_with_jwt_api$Main$fetchRandomQuoteCmd = A2(_elm_lang$http$Http$send, _auth0_blog$elm_with_jwt_api$Main$FetchRandomQuoteCompleted, _auth0_blog$elm_with_jwt_api$Main$fetchRandomQuote);
 var _auth0_blog$elm_with_jwt_api$Main$init = {
 	ctor: '_Tuple2',
 	_0: _auth0_blog$elm_with_jwt_api$Main$Model(''),
-	_1: _elm_lang$core$Platform_Cmd$none
+	_1: _auth0_blog$elm_with_jwt_api$Main$fetchRandomQuoteCmd
 };
+var _auth0_blog$elm_with_jwt_api$Main$update = F2(
+	function (msg, model) {
+		var _p1 = msg;
+		if (_p1.ctor === 'GetQuote') {
+			return {ctor: '_Tuple2', _0: model, _1: _auth0_blog$elm_with_jwt_api$Main$fetchRandomQuoteCmd};
+		} else {
+			return A2(_auth0_blog$elm_with_jwt_api$Main$fetchRandomQuoteCompleted, model, _p1._0);
+		}
+	});
 var _auth0_blog$elm_with_jwt_api$Main$GetQuote = {ctor: 'GetQuote'};
 var _auth0_blog$elm_with_jwt_api$Main$view = function (model) {
 	return A2(
@@ -97,7 +115,7 @@ var _auth0_blog$elm_with_jwt_api$Main$main = _elm_lang$html$Html$program(
 	{
 		init: _auth0_blog$elm_with_jwt_api$Main$init,
 		update: _auth0_blog$elm_with_jwt_api$Main$update,
-		subscriptions: function (_p1) {
+		subscriptions: function (_p2) {
 			return _elm_lang$core$Platform_Sub$none;
 		},
 		view: _auth0_blog$elm_with_jwt_api$Main$view
